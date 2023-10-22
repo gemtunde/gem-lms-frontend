@@ -2,6 +2,11 @@
 
 import React, { FC, useState } from "react";
 import SidebarProfile from "./SidebarProfile";
+import { useLogoutQuery } from "@/redux/features/auth/authApi";
+import { signOut } from "next-auth/react";
+import { redirect } from "next/navigation";
+
+import ProfileInfo from "./ProfileInfo";
 
 type Props = {
   user: any;
@@ -9,13 +14,20 @@ type Props = {
 
 const ProfileComponent: FC<Props> = ({ user }) => {
   const [scroll, setScroll] = useState(false);
+  const [logout, setLogout] = useState(false);
 
   const [avatar, setAvatar] = useState(null);
   const [active, setActive] = useState(1);
 
+  //logout state
+  const {} = useLogoutQuery(undefined, {
+    skip: !logout ? true : false,
+  });
+
   //logout
   const logoutHandler = async () => {
-    console.log("logout");
+    setLogout(true);
+    await signOut();
   };
 
   if (typeof window !== "undefined") {
@@ -42,6 +54,8 @@ const ProfileComponent: FC<Props> = ({ user }) => {
           logoutHandler={logoutHandler}
         />
       </div>
+
+      {active === 1 && <ProfileInfo user={user} avatar={avatar} />}
     </div>
   );
 };

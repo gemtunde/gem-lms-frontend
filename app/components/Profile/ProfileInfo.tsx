@@ -102,7 +102,7 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
-            <div className="w-[100%] pt-2">
+            <div className="w-[100%] py-2">
               <label className="block pb-2">Email Address</label>
               <input
                 type="text"
@@ -113,7 +113,8 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
               />
             </div>
             <input
-              className={`w-full 800px:w-[250px] h-[40px] border border-[#37a39a] text-center dark:text-[#fff] text-black rounded-[3px] mt-8 cursor-pointer`}
+              // className={`w-full 800px:w-[250px] h-[40px] border border-[#37a39a] text-center dark:text-[#fff] text-black rounded-[3px] mt-8 cursor-pointer`}
+              className={styles.button}
               required
               value="Update"
               type="submit"

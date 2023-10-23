@@ -4,6 +4,7 @@ import avatarDefault from "@/public/assests/avatar.png";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { SiCoursera } from "react-icons/si";
 import { AiOutlineLogout } from "react-icons/ai";
+import Link from "next/link";
 
 type Props = {
   user: any;
@@ -52,6 +53,19 @@ const SidebarProfile: FC<Props> = ({
           Change Password
         </h5>
       </div>
+      {user?.role === "admin" && (
+        <Link
+          className={`w-full flex items-center px-3 py-4 cursor-pointer ${
+            active === 5 ? "bg-slate-800" : "bg-transparent"
+          }`}
+          href={"/admin"}
+        >
+          <RiLockPasswordLine size={20} fill="#fff" />
+          <h5 className="pl-2 800px:block hidden text-white font-Poppins dark:text-white ">
+            Admin Dashboard
+          </h5>
+        </Link>
+      )}
       <div
         className={`w-full flex items-center px-3 py-4 cursor-pointer ${
           active === 3 ? "bg-slate-800" : "bg-transparent"

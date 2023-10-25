@@ -3,6 +3,7 @@ import CourseInformation from "./CourseInformation ";
 import CourseOptions from "./CourseOptions";
 import CourseData from "./CourseData";
 import CourseContent from "./CourseContent";
+import CoursePreview from "./CoursePreview";
 
 type Props = {};
 
@@ -40,7 +41,59 @@ const CreateCourse = (props: Props) => {
   const [courseData, setCourseData] = useState({});
 
   // handle Submit data
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    // Format benefits array
+    const formattedBenefits = benefits.map((benefit) => ({
+      title: benefit.title,
+    }));
+    // Format prerequisites array
+    const formattedPrerequisites = prerequisites.map((prerequisite) => ({
+      title: prerequisite.title,
+    }));
+
+    // Format course content array
+    const formattedCourseContentData = courseContentData.map(
+      (courseContent) => ({
+        videoUrl: courseContent.videoUrl,
+        title: courseContent.title,
+        description: courseContent.description,
+        videoLength: courseContent.videoLength,
+        videoSection: courseContent.videoSection,
+        links: courseContent.links.map((link) => ({
+          title: link.title,
+          url: link.url,
+        })),
+        suggestion: courseContent.suggestion,
+      })
+    );
+
+    //   prepare our data object
+    const data = {
+      name: courseInfo.name,
+      description: courseInfo.description,
+      categories: courseInfo.categories,
+      price: courseInfo.price,
+      estimatedPrice: courseInfo.estimatedPrice,
+      tags: courseInfo.tags,
+      thumbnail: courseInfo.thumbnail,
+      level: courseInfo.level,
+      demoUrl: courseInfo.demoUrl,
+      totalVideos: courseContentData.length,
+      benefits: formattedBenefits,
+      prerequisites: formattedPrerequisites,
+      courseData: formattedCourseContentData,
+    };
+
+    //set/save in usestate
+    setCourseData(data);
+    console.log("preview data", data);
+  };
+
+  // handle Course Create
+  const handleCourseCreate = (e: any) => {
+    e.preventDefault();
+    const data = courseData;
+  };
   return (
     <div className="w-full flex min-h-screen">
       <div className="w-[80%]">
@@ -69,6 +122,14 @@ const CreateCourse = (props: Props) => {
             courseContentData={courseContentData}
             setCourseContentData={setCourseContentData}
             handleSubmit={handleSubmit}
+          />
+        )}
+        {active === 3 && (
+          <CoursePreview
+            active={active}
+            setActive={setActive}
+            courseData={setCourseData}
+            handleCourseCreate={handleCourseCreate}
           />
         )}
       </div>

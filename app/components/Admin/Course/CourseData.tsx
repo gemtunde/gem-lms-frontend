@@ -1,4 +1,5 @@
 import { styles } from "@/app/styles/style";
+import { RemoveCircleOutline } from "@mui/icons-material";
 import React, { FC } from "react";
 import toast from "react-hot-toast";
 import { RiAddCircleFill } from "react-icons/ri";
@@ -27,6 +28,12 @@ const CourseData: FC<Props> = ({
     setBenefits(updatedBenefits);
   };
 
+  //handle Remove Benefit;
+  const handleRemoveBenefit = (index: number) => {
+    const updatedBenefits = [...benefits];
+    const removeBenefit = updatedBenefits.filter((item, idx) => idx !== index);
+    setBenefits(removeBenefit);
+  };
   //handle Add Benefits;
   const handleAddBenefits = () => {
     setBenefits([...benefits, { title: "" }]);
@@ -42,6 +49,14 @@ const CourseData: FC<Props> = ({
   //handle Add prerequisites;
   const handleAddprerequisites = () => {
     setPrerequisites([...prerequisites, { title: "" }]);
+  };
+  //handle Remove prerequisites
+  const handleRemoveprerequisite = (index: number) => {
+    const updatedPrerequisite = [...prerequisites];
+    const removePrerequisite = updatedPrerequisite.filter(
+      (item, idx) => idx !== index
+    );
+    setPrerequisites(removePrerequisite);
   };
 
   const prevButton = () => {
@@ -67,16 +82,21 @@ const CourseData: FC<Props> = ({
         </label>
         <br />
         {benefits.map((benefit: any, index: number) => (
-          <input
-            type="text"
-            key={index}
-            name="Benefit"
-            placeholder="You will be able to build a fullstack LMS Platform"
-            required
-            className={`${styles.input} my-2`}
-            value={benefit.title}
-            onChange={(e) => handleBenefitChange(index, e.target.value)}
-          />
+          <div key={index} className="flex items-center justify-center gap-2">
+            <input
+              type="text"
+              name="Benefit"
+              placeholder="You will be able to build a fullstack LMS Platform"
+              required
+              className={`${styles.input} my-2`}
+              value={benefit.title}
+              onChange={(e) => handleBenefitChange(index, e.target.value)}
+            />
+            <RemoveCircleOutline
+              style={{ margin: "0px 10px", cursor: "pointer", width: "30px" }}
+              onClick={() => handleRemoveBenefit(index)}
+            />
+          </div>
         ))}
         <RiAddCircleFill
           style={{ margin: "10px 0px", cursor: "pointer", width: "30px" }}
@@ -91,16 +111,21 @@ const CourseData: FC<Props> = ({
         </label>
         <br />
         {prerequisites.map((prerequisite: any, index: number) => (
-          <input
-            type="text"
-            key={index}
-            name="prerequisite"
-            placeholder="Minimum requirement for this course"
-            required
-            className={`${styles.input} my-2`}
-            value={prerequisite.title}
-            onChange={(e) => handleprerequisiteChange(index, e.target.value)}
-          />
+          <div key={index} className="flex items-center justify-center gap-2">
+            <input
+              type="text"
+              name="prerequisite"
+              placeholder="Minimum requirement for this course"
+              required
+              className={`${styles.input} my-2`}
+              value={prerequisite.title}
+              onChange={(e) => handleprerequisiteChange(index, e.target.value)}
+            />
+            <RemoveCircleOutline
+              style={{ margin: "0px 10px", cursor: "pointer", width: "30px" }}
+              onClick={() => handleRemoveprerequisite(index)}
+            />
+          </div>
         ))}
         <RiAddCircleFill
           style={{ margin: "10px 0px", cursor: "pointer", width: "30px" }}

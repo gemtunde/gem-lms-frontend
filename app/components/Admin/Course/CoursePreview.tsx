@@ -20,6 +20,7 @@ const CoursePreview: FC<Props> = ({
   active,
   //isEdit,
 }) => {
+  //console.log("course data", courseData);
   const dicountPercentenge =
     ((courseData?.estimatedPrice - courseData?.price) /
       courseData?.estimatedPrice) *

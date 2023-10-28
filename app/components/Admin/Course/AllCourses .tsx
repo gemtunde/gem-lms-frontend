@@ -4,33 +4,56 @@ import { Box, Button, Modal } from "@mui/material";
 import { AiOutlineDelete } from "react-icons/ai";
 import { useTheme } from "next-themes";
 import { FiEdit2 } from "react-icons/fi";
-// import {
-//   useDeleteCourseMutation,
-//   useGetAllCoursesQuery,
-// } from "@/redux/features/courses/coursesApi";
+
 import Loader from "../../Loader/Loader";
-//import { format } from "timeago.js";
-//import TimeAgo from "javascript-time-ago";
+
 import { styles } from "@/app/styles/style";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
-import { useGetAllCoursesQuery } from "@/redux/features/courses/courseApis";
-//import en from "javascript-time-ago/locale/en";
+import {
+  useDeleteCourseMutation,
+  useGetAllCoursesQuery,
+} from "@/redux/features/courses/courseApis";
+
 type Props = {};
 
 const AllCourses = (props: Props) => {
   const { theme, setTheme } = useTheme();
-
-  // Create formatter (English).
-  //   TimeAgo.addDefaultLocale(en);
-  //   const timeAgo = new TimeAgo("en-US");
-
-  //state get all courses
-  const { isLoading, error, isSuccess, data } = useGetAllCoursesQuery({});
-
   const [open, setOpen] = useState(false);
   const [courseId, setCourseId] = useState("");
 
+  //state get all courses
+  const { isLoading, error, isSuccess, data, refetch } = useGetAllCoursesQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
+  );
+
+  //state delete course
+  const [
+    deleteCourse,
+    {
+      isLoading: deleteIsLoading,
+      error: deleteIsError,
+      isSuccess: deleteIsSuccess,
+    },
+  ] = useDeleteCourseMutation();
+
+  useEffect(() => {
+    if (deleteIsSuccess) {
+      refetch();
+      toast.success("Course deleted success");
+      setOpen(!open);
+    }
+    if (deleteIsError) {
+      if ("data" in deleteIsError) {
+        const errorMessage: any = deleteIsError;
+        toast.error(errorMessage.data.message);
+        setOpen(!open);
+      }
+    }
+  }, [deleteIsError, deleteIsSuccess]);
+
+  //table columns
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
     { field: "title", headerName: "Course Title", flex: 1 },
@@ -40,7 +63,7 @@ const AllCourses = (props: Props) => {
     {
       field: "  ",
       headerName: "Edit",
-      flex: 0.2,
+      flex: 0.4,
       renderCell: (params: any) => {
         return (
           <>
@@ -54,7 +77,7 @@ const AllCourses = (props: Props) => {
     {
       field: " ",
       headerName: "Delete",
-      flex: 0.2,
+      flex: 0.4,
       renderCell: (params: any) => {
         return (
           <>
@@ -90,6 +113,12 @@ const AllCourses = (props: Props) => {
         })
       );
   }
+
+  //handle delete course
+  const handleDeleteCourse = async () => {
+    const id = courseId;
+    await deleteCourse(id);
+  };
   return (
     <div className="mt-[120px]">
       {isLoading ? (
@@ -150,6 +179,36 @@ const AllCourses = (props: Props) => {
           >
             <DataGrid checkboxSelection rows={rows} columns={columns} />
           </Box>
+          {/* modal for delete member */}
+          {open && (
+            <Modal
+              open={open}
+              onClose={() => setOpen(!open)}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[450px] bg-white dark:bg-slate-900 rounded-[8px] shadow p-4 outline-none">
+                <h1 className={`${styles.title}`}>
+                  {" "}
+                  Are you sure, you want to delete this Course{" "}
+                </h1>
+                <div className="flex w-full items-center justify-between mb-6 mt-4">
+                  <div
+                    className={`${styles.button} !w-[120px] h-[30px] bg-[#57c7a3]`}
+                    onClick={() => setOpen(!open)}
+                  >
+                    Cancel
+                  </div>
+                  <div
+                    className={`${styles.button} !w-[120px] h-[30px] bg-[#d63f3f]`}
+                    onClick={handleDeleteCourse}
+                  >
+                    Delete
+                  </div>
+                </div>
+              </Box>
+            </Modal>
+          )}
         </Box>
       )}
     </div>

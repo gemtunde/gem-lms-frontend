@@ -19,7 +19,7 @@ const page = (props: Props) => {
           keywords="MERN, VUE, React"
         />
         <div className="flex h-screen">
-          <div className="1500px : w-[16%] w-1/5">
+          <div className="1500px:w-[16%] w-1/5">
             <AdminSidebar />
           </div>
           <div className="w-[85%]">

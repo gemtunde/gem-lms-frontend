@@ -30,7 +30,11 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
   const [active, setActive] = useState(false);
 
   //state get all users
-  const { isLoading, error, isSuccess, data } = useGetAllUsersQuery({});
+  //refetch is import when u mahe update/delete, it helps u clear the cache and  refetch data quickly
+  const { isLoading, error, isSuccess, data, refetch } = useGetAllUsersQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
+  );
 
   //state update user role (admin or user)
   const [
@@ -54,6 +58,7 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
 
   useEffect(() => {
     if (updateIsSuccess) {
+      refetch();
       toast.success("User role updated successfully");
     }
     if (updateIsError) {
@@ -64,6 +69,7 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
       }
     }
     if (deleteIsSuccess) {
+      refetch();
       toast.success("User deleted successfully");
     }
     if (deleteIsError) {
@@ -174,7 +180,7 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
   };
 
   //handle delete user
-  const handleDelete = async () => {
+  const handleDeleteUser = async () => {
     await deleteUser(userId);
   };
 
@@ -320,7 +326,7 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
                     </div>
                     <div
                       className={`${styles.button} !w-[120px] h-[30px] bg-[#d63f3f]`}
-                      onClick={handleDelete}
+                      onClick={handleDeleteUser}
                     >
                       Delete
                     </div>

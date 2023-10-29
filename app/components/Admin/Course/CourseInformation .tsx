@@ -1,5 +1,6 @@
 import { styles } from "@/app/styles/style";
-import React, { FC, useState } from "react";
+import { useGetHeroDataQuery } from "@/redux/features/layout/layoutApi";
+import React, { FC, useEffect, useState } from "react";
 
 type CourseInfoProps = {
   name: string;
@@ -26,6 +27,17 @@ const CourseInformation: FC<Props> = ({
   setActive,
 }) => {
   const [dragging, setDragging] = useState(false);
+  const [categories, setCategories] = useState([]);
+
+  //add categories to state
+  useEffect(() => {
+    if (data) {
+      setCategories(data.layout.categories);
+    }
+  }, []);
+
+  //state get categories
+  const { data } = useGetHeroDataQuery("Categories", {});
 
   //form submit
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -145,22 +157,44 @@ const CourseInformation: FC<Props> = ({
             />
           </div>
         </div>
-        <div className="my-4 flex flex-col items-start">
-          <label htmlFor="" className={styles.label}>
-            Tags
-          </label>
-          <input
-            type="text"
-            name=""
-            id="tags"
-            required
-            value={courseInfo?.tags}
-            onChange={(e: any) =>
-              setCourseInfo({ ...courseInfo, tags: e.target.value })
-            }
-            placeholder="MERN, Java, Nextjs"
-            className={`${styles.input}`}
-          />
+
+        <div className="flex items-center flex-col gap-3 800px:flex-row">
+          <div className="my-4 flex flex-col items-start 800px:w-[50%] w-[100%]">
+            <label htmlFor="" className={styles.label}>
+              Tags
+            </label>
+            <input
+              type="text"
+              name=""
+              id="tags"
+              required
+              value={courseInfo?.tags}
+              onChange={(e: any) =>
+                setCourseInfo({ ...courseInfo, tags: e.target.value })
+              }
+              placeholder="MERN, Java, Nextjs"
+              className={`${styles.input}`}
+            />
+          </div>
+          <div className="my-4 flex flex-col items-start 800px:w-[50%] w-[100%]">
+            <label htmlFor="" className={styles.label}>
+              Categories
+            </label>
+            <select
+              value={courseInfo.categories}
+              onChange={(e: any) =>
+                setCourseInfo({ ...courseInfo, categories: e.target.value })
+              }
+              className={`${styles.input}`}
+            >
+              <option value="">Select Category</option>
+              {categories.map((item: any) => (
+                <option value={item._id} key={item._id}>
+                  {item.title}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <div className="flex items-center flex-col gap-3 800px:flex-row">
           <div className="my-4 flex flex-col items-start 800px:w-[50%] w-[100%]">

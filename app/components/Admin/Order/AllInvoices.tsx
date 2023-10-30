@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { useTheme } from "@emotion/react";
+import { useTheme } from "next-themes";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
 import { useGetAllOrdersQuery } from "@/redux/features/orders/ordersApi";

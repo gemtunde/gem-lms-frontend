@@ -1,18 +1,23 @@
+import React, { FC, useState } from "react";
 import { styles } from "@/app/styles/style";
 import CoursePlayer from "@/app/utils/CoursePlayer";
 import Ratings from "@/app/utils/Ratings";
 import Image from "next/image";
 import Link from "next/link";
-import React, { FC } from "react";
-import { IoCheckmarkDoneOutline } from "react-icons/io5";
+import { IoCheckmarkDoneOutline, IoCloseOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import CourseContentList from "./CourseContentList";
+import { Elements } from "@stripe/react-stripe-js";
+import CheckOutForm from "../Payment/CheckOutForm";
 
 type Props = {
   data: any;
+  clientSecret: string;
+  stripePromise: any;
 };
 
-const CourseDetails: FC<Props> = ({ data }) => {
+const CourseDetails: FC<Props> = ({ data, stripePromise, clientSecret }) => {
+  const [open, setOpen] = useState(false);
   const { user } = useSelector((state: any) => state.auth);
 
   //calculate discount
@@ -32,6 +37,7 @@ const CourseDetails: FC<Props> = ({ data }) => {
     //      setRoute("Login");
     //      openAuthModal(true);
     //    }
+    setOpen(true);
   };
 
   return (
@@ -213,14 +219,14 @@ const CourseDetails: FC<Props> = ({ data }) => {
               <div className="flex items-center">
                 {isPurchased ? (
                   <Link
-                    className={`${styles.button} !w-[180px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
+                    className={`${styles.button} !w-[210px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
                     href={`/course-access/${data._id}`}
                   >
                     Enter to Course
                   </Link>
                 ) : (
                   <div
-                    className={`${styles.button} !w-[180px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
+                    className={`${styles.button} !w-[210px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
                     onClick={handleOrder}
                   >
                     Buy Now {data.price}$
@@ -244,7 +250,7 @@ const CourseDetails: FC<Props> = ({ data }) => {
           </div>
         </div>
       </div>
-      {/* <>
+      <>
         {open && (
           <div className="w-full h-screen bg-[#00000036] fixed top-0 left-0 z-50 flex items-center justify-center">
             <div className="w-[500px] min-h-[500px] bg-white rounded-xl shadow p-3">
@@ -262,7 +268,7 @@ const CourseDetails: FC<Props> = ({ data }) => {
                       setOpen={setOpen}
                       data={data}
                       user={user}
-                      refetch={refetch}
+                      //refetch={refetch}
                     />
                   </Elements>
                 )}
@@ -270,7 +276,7 @@ const CourseDetails: FC<Props> = ({ data }) => {
             </div>
           </div>
         )}
-      </> */}
+      </>
     </div>
   );
 };
